@@ -1,0 +1,13 @@
+*.o
+*.a
+*.so
+*.dylib
+*.dll
+*.obj
+*.lib
+
+.zig-cache/
+zig-out/
+*.o
+*.bin
+*.iso

@@ -1,0 +1,18 @@
+name: mini_os_ci
+
+on: [push, pull_request]
+
+jobs:
+  build-kernel:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: true # If you include waks_cstd as a submodule
+
+      - uses: mlugg/setup-zig@v1
+        with:
+          zig-version: 0.13.0
+
+      - name: Build Kernel
+        run: zig build

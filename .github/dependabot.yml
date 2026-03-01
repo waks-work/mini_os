@@ -1,0 +1,16 @@
+version: 2
+updates:
+  # Monitor GitHub Actions for CI stability
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "monthly"
+    labels:
+      - "ci"
+    groups:
+      actions_updates:
+        patterns:
+          - "*"
+
+  # Monitor Zig (if using zig-managed packages later)
+  # For now, this stays minimal as you have 0 external C dependencies.
