@@ -1,8 +1,0 @@
-{
-  "zig_exe_path": "/usr/bin/zig",
-  "warn_style": true,
-  "enable_snippets": true,
-  "include_dirs": [
-    "../waks_cstd/include"
-  ]
-}
