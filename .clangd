@@ -1,0 +1,11 @@
+SemanticTokens:
+  DisabledKinds: [InactiveCode]   
+
+CompileFlags:
+  Add:
+    - -Ithirdparty/waks_cstd
+    - -DWAKS_TARGET_BARE_METAL
+    - -target
+    - x86_64-unknown-none-elf
+    - -ffreestanding
+    - -nostdlib

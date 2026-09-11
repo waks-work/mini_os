@@ -1,0 +1,38 @@
+[
+  {
+    "file": "boot/boot.s",
+    "arguments": [
+      "/usr/bin/clang",
+      "-m32",
+      "-c",
+      "boot/boot.s",
+      "-o",
+      "build/boot.o"
+    ],
+    "directory": "/home/waks_work/Documents/projects/waks_cprojects/mini_os",
+    "output": "build/boot.o"
+  },
+  {
+    "file": "kernel/main.c",
+    "arguments": [
+      "/usr/bin/clang",
+      "-target",
+      "i386-unknown-none-elf",
+      "-m32",
+      "-ffreestanding",
+      "-fno-stack-protector",
+      "-fno-pic",
+      "-DWAKS_TARGET_BARE_METAL",
+      "-Wall",
+      "-Wextra",
+      "-std=c11",
+      "-Ithirdparty/waks_cstd",
+      "-c",
+      "kernel/main.c",
+      "-o",
+      "build/kernel.o"
+    ],
+    "directory": "/home/waks_work/Documents/projects/waks_cprojects/mini_os",
+    "output": "build/kernel.o"
+  }
+]
