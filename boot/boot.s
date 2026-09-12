@@ -32,7 +32,13 @@ gdt64_end:
 
 gdt64_pointer:
     .word gdt64_end - gdt64 - 1   # limit = size of GDT - 1
-    .long gdt64                    # base = address of GDT
+    .long gdt64                   # base = address of GDT
+
+# IDT
+.global isr0
+
+# LIDT 
+.global waks_lidt
 
 .code32
 _start:
@@ -84,6 +90,15 @@ long_mode_start:
 
     # Call the kernel C code
     call kernel_main
+
+isr0:
+    cli
+    hlt
+    iretq
+
+waks_lidt: 
+    lidt (%rdi)
+    ret
 
 halt:
     cli
