@@ -66,7 +66,7 @@ _start:
     mov %eax, (pd_table)
 
     # Enable long mode via EFER MSR 
-    mov $0xC0000080, %ecx   # EFER MSR number
+    mov $0xC0000080, %ecx    # EFER MSR number
     rdmsr                    # read current EFER into EDX:EAX
     or  $0x100, %eax         # set bit 8 (LME) in the low 32 bits
     wrmsr                    # write EDX:EAX back into EFER
@@ -91,14 +91,82 @@ long_mode_start:
     # Call the kernel C code
     call kernel_main
 
-isr0:
-    cli
-    hlt
-    iretq
-
 waks_lidt: 
     lidt (%rdi)
     ret
+
+# ISR MACROS STUBS 
+.macro ISR_NOERRCODE num 
+.global isr\num
+isr\num:
+    cli
+    pushq $0         # dummy error code to keep stack uniform
+    pushq $\num      # push the vector number
+    jmp isr_common_stub
+.endm
+
+.macro ISR_ERRCODE num 
+.global isr\num
+isr\num:
+    cli
+    # error code is sent by the hardware
+    pushq $\num      # push the vector number
+    jmp isr_common_stub
+.endm
+
+# Generate the stubs
+ISR_NOERRCODE 0  # divide by zero error (#DE)
+ISR_NOERRCODE 6  # invalid opcode (#UD)
+ISR_ERRCODE   13 # general protection fault (#GP)
+ISR_ERRCODE   14 # page fault error (#PF)
+
+.global isr_common_stub
+.extern exception_handler
+
+isr_common_stub:
+    # Save general-purpose registers (System V ABI context)
+    pushq %rax
+    pushq %rcx
+    pushq %rdx
+    pushq %rbx
+    pushq %rbp
+    pushq %rsi
+    pushq %rdi
+    pushq %r8
+    pushq %r9
+    pushq %r10
+    pushq %r11
+    pushq %r12
+    pushq %r13
+    pushq %r14
+    pushq %r15
+
+    # Pass pointer to the saved stack frame as 1st argument (%rdi) to C
+    movq %rsp, %rdi
+    call exception_handler
+
+    # Restore general-purpose registers
+    popq %r15
+    popq %r14
+    popq %r13
+    popq %r12
+    popq %r11
+    popq %r10
+    popq %r9
+    popq %r8
+    popq %rdi
+    popq %rsi
+    popq %rbp
+    popq %rbx
+    popq %rdx
+    popq %rcx
+    popq %rax
+
+    # Clean up vector number and error code (16 bytes)
+    addq $16, %rsp
+
+    # Return from interrupt (restores CS, RIP, RFLAGS, RSP, SS)
+    iretq
 
 halt:
     cli

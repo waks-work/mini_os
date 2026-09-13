@@ -4,7 +4,6 @@
 #define WAKS_CONTAINER_IMPLEMENTATION
 #define WAKS_IO_IMPLEMENTATION
 
-#define WAKS_TARGET_BAREMETAL
 #include "waks.h"
 #include "idt.h"
 

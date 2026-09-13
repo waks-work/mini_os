@@ -39,17 +39,17 @@ Entries in the PT contain the physical address of the actual 4 KB memory pages.
       How do I set up an IDT so the CPU can call my handler code when an interrupt or exception occurs, in 64-bit long mode?
    
    What's in scope
-     - [] IDT structure in long mode: 
+     - [x] IDT structure in long mode: 
            how it differs from the 32-bit IDT (64-bit mode has a wider gate descriptor format,
            16 bytes instead of 8, since handler addresses are now 64-bit)
-     - [] Gate descriptor format: 
+     - [x] Gate descriptor format: 
             what fields make up each of the 256 possible entries (offset, segment selector, type/attributes)
-     - [] idt instruction: 
+     - [x] idt instruction: 
             the direct analog of lgdt from yesterday, loading the IDT's address/size
-     - [] A minimal handler stub: 
+     - [x] A minimal handler stub: 
             what a bare "do nothing but return" interrupt handler needs (specifically iretq for the return,
             not a normal ret, since interrupts have different stack behavior)
-     - [] Testing it: 
+     - [x] Testing it: 
             deliberately triggering a fault (divide by zero is the classic first test) to confirm your handler actually gets called
    Suggested research trace
        OSDev Wiki — "Interrupt Descriptor Table" (the direct analog of yesterday's "Setting Up Long Mode" page — likely your primary source)

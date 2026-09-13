@@ -2,29 +2,39 @@
 set -e
 mkdir -p build
 
-## 1. COMPILE BOOTLOADER (starts in 32-bit mode via .code32, transitions to long mode internally)
+## COMMON C FLAGS
+CFLAGS=(
+    -target x86_64-unknown-none-elf
+    -ffreestanding
+    -fno-stack-protector
+    -fno-pic
+    -nostdlib
+    -DWAKS_TARGET_BARE_METAL
+    -Wno-pointer-sign
+    -Wall
+    -Wextra
+    -std=c11
+    -Ithirdparty/waks_cstd
+    -Ikernel
+)
+
+# Compile the bootloader
 clang -c boot/boot.s -o build/boot.o
 
-## 2. COMPILE KERNEL (genuine 64-bit freestanding target)
-clang \
-    -target x86_64-unknown-none-elf \
-    -ffreestanding \
-    -fno-stack-protector \
-    -fno-pic \
-    -nostdlib \
-    -DWAKS_TARGET_BARE_METAL \
-    -Wall \
-    -Wextra \
-    -std=c11 \
-    -Ithirdparty/waks_cstd \
-    -c kernel/main.c \
-    -o build/kernel.o
+# Compile all files in kernel 
+KERNEL_OBJ=()
+for c_file in kernel/*.c; do 
+    filename=$(basename "$c_file" .c)
+    obj_file="build/${filename}.o"
+    clang "${CFLAGS[@]}" -c "$c_file" -o "$obj_file"
+    KERNEL_OBJ+=("$obj_file")
+done
 
 ## 3. LINK (64-bit throughout — boot.s's long-mode trampoline makes this consistent again)
 clang -target x86_64-unknown-none-elf -ffreestanding -nostdlib -static \
     -T kernel/linker.ld \
     build/boot.o \
-    build/kernel.o \
+    "${KERNEL_OBJ[@]}" \
     thirdparty/waks_cstd/libwaks.a \
     -o build/kernel.elf
 

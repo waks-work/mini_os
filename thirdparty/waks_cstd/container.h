@@ -171,8 +171,14 @@ struct waks_hash_map
 // this is the hash function implementation from the k33 algorithm 
 // from dan bernstein(djb2).
 waks_u64   waks_hstr_function(const waks_char *str);
+
+// this initialises the hashmap using the malloc(ie heap)
 void       waks_hm_init_malloc(waks_hash_map *m, waks_ssize capacity);
+
+// this initialises the hashmap using our arena
 void       waks_hm_init_arena(waks_arena *arena, waks_hash_map *m, waks_ssize capacity);
+
+// this insert an element: {key, value} to the hashmap
 void       waks_hm_insert(waks_hash_map *m, const waks_char *key, void *value);
 void       waks_hm_resize(waks_hash_map *m, waks_ssize capacity);
 void      *waks_hm_get(waks_hash_map *m, const waks_char *key);

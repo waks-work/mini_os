@@ -246,6 +246,9 @@ void waks_os_panic(void);
 
 /// ARENA STRUCTS
 
+void *waks_memcpy(void *dst, const void *src, waks_usize n);
+void *waks_memset(void *dst, int val, waks_usize n);
+
 typedef enum {
     WAKS_ARENA_FLAG_NONE       = 0,
     WAKS_ARENA_FLAG_READONLY   = (1 << 0), // Prevents new pushes
@@ -567,7 +570,7 @@ waks_arena *current_arena = WAKS_NOVALUE;
 // memset and memcpy implementation 
 void *memcpy(void *dst, const void *src, waks_usize n)
 {
-    waks_uchar *d = (waks_uchar *)dst;
+    waks_uchar *d       = (waks_uchar *)dst;
     const waks_uchar *s = (const waks_uchar *)src;
     for (waks_usize i = 0; i < n; i++) d[i] = s[i];
     return dst;
@@ -579,6 +582,22 @@ void *memset(void *dst, int val, waks_usize n)
     for (waks_usize i = 0; i < n; i++) d[i] = (waks_uchar)val;
     return dst;
 }
+
+void *waks_memcpy(void *dst, const void *src, waks_usize n)
+{
+    waks_uchar *d       = (waks_uchar *)dst;
+    const waks_uchar *s = (const waks_uchar *)src;
+    for (waks_usize i = 0; i < n; i++) d[i] = s[i];
+    return dst;
+}
+
+void *waks_memset(void *dst, int val, waks_usize n)
+{
+    waks_uchar *d = (waks_uchar *)dst;
+    for (waks_usize i = 0; i < n; i++) d[i] = (waks_uchar)val;
+    return dst;
+}
+
 
 ///
 /// ARENA IMPLEMENTATION
