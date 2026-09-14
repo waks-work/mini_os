@@ -1,5 +1,8 @@
 #include "idt.h"
 
+m_idt_entry idt[256];
+m_idt_ptr idtp;
+
 __attribute__((noinline)) void exception_handler(m_registers *regs)
 {
     waks_io_print(WAKS_2STR("\n--- KERNEL PANIC: CPU EXCEPTION --- \n"));

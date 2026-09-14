@@ -43,8 +43,8 @@ typedef struct __attribute__((packed)) {
 } m_registers;
 
 // define our array of 256 interupt descriptors
-static m_idt_entry idt[256];
-static m_idt_ptr idtp;
+extern m_idt_entry idt[256];
+extern m_idt_ptr idtp;
 
 // declared in boot.s
 extern void waks_lidt(m_idt_ptr *ptr);
